@@ -1,0 +1,32 @@
+<?xml version='1.0' ?>
+<!-- Test the xsltxt task -->
+<project name="com.zanthan.xsl"
+  default="test">
+
+  <!-- Define the xsltxt task so that we can use it -->
+  <taskdef name="xsltxt" classname="com.zanthan.xsltxt.ant.XSLTXTProcess"/>
+  
+  <target name="test">
+    <mkdir dir="${basedir}/tests/test_01/txtresults"/>
+    
+    <xsltxt
+      style="tests/test_01/txt/rpt1.txt"
+      in="tests/test_01/xml/test.xml"
+      out="tests/test_01/txtresults/rpt1.html"
+      force="true"/>
+
+    <xsltxt
+      style="tests/test_01/txt/rpt2.txt"
+      in="tests/test_01/xml/test.xml"
+      out="tests/test_01/txtresults/rpt2.html"
+      force="true"/>
+
+    <xsltxt
+      style="tests/test_01/txt/rpt3.txt"
+      in="tests/test_01/xml/test.xml"
+      out="tests/test_01/txtresults/rpt3.html"
+      force="true"/>
+
+   </target>
+  
+</project>  

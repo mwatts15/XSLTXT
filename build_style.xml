@@ -1,0 +1,32 @@
+<?xml version='1.0' ?>
+<!-- Test the style task with processor set -->
+<project name="com.zanthan.xsl"
+  default="test">
+
+  <target name="test">
+    <mkdir dir="${basedir}/tests/test_01/txtresults"/>
+    
+    <style
+      style="tests/test_01/txt/rpt1.txt"
+      in="tests/test_01/xml/test.xml"
+      out="tests/test_01/txtresults/rpt1.html"
+      processor="com.zanthan.xsltxt.ant.XSLTXTLiaison"
+      force="true"/>
+
+    <style
+      style="tests/test_01/txt/rpt2.txt"
+      in="tests/test_01/xml/test.xml"
+      out="tests/test_01/txtresults/rpt2.html"
+      processor="com.zanthan.xsltxt.ant.XSLTXTLiaison"
+      force="true"/>
+
+    <style
+      style="tests/test_01/txt/rpt3.txt"
+      in="tests/test_01/xml/test.xml"
+      out="tests/test_01/txtresults/rpt3.html"
+      processor="com.zanthan.xsltxt.ant.XSLTXTLiaison"
+      force="true"/>
+
+   </target>
+  
+</project>  

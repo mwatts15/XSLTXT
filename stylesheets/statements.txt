@@ -1,0 +1,90 @@
+stylesheet "1.0"
+# Code to convert the output from running StatementDescriptions into
+# simpledocbook format.
+
+output .method "xml" .version "1.0" .omit-xml-declaration "no" .standalone "no"
+  .doctype-public "http://www.oasis-open.org/docbook/xml/simple/4.1.2.5/sdocbook.dtd"
+  .doctype-system "../sdocbook.dtd" .indent "yes"
+
+tpl .match "statements"
+  <article>
+    <articleinfo>
+      <title>
+        "TXTXSLT Statements"
+    <section>
+      <title>
+        "Statement descriptions"
+      apply .select "statement"
+        sort .by "txtName"
+
+tpl .match "statement"
+  <section>
+    <title>
+      val "txtName"
+    <para>
+      <emphasis>
+        "XML Element"
+      " "
+      choose 
+        when "elementName"
+          <literal>
+            val "elementName"
+        otherwise
+          "This statement has no corresponding xml element."
+    call "requiredFields"
+    call "optionalFields"
+    call "example"
+
+tpl .name "requiredFields"	
+  choose
+    when "requiredFields"
+      <para>
+        "This statement has some required fields. "
+        "Their values must be provided in the order shown below. "
+	"Each field corresponds to an xml attribute the name "
+        "of which is shown."
+      <orderedlist>
+        apply .select "requiredFields/field" .mode "required"
+    otherwise
+      <para>
+        "This statement has no required fields."
+
+tpl .name "optionalFields"
+  choose
+    when "optionalFields"
+      <para>
+        "This statement has the following optional fields. These "
+        "can be provided in any order. Each shows the xml attribute "
+        "name and the txt field name to use"
+      <itemizedlist>
+        apply .select "optionalFields/field" .mode "optional"
+
+tpl .name "example"		
+  if "example"
+    <para> "An example of using " val "txtName"
+    <programlisting>
+      val "example"
+	
+tpl .match "field" .mode "required"
+  <listitem>
+    <para>
+      <emphasis>
+        "Attribute name"
+      " "
+      <literal>
+        val "attributeName"
+
+tpl .match "field" .mode "optional"
+  <listitem>
+    <para>
+      <emphasis>
+        "Attribute name"
+      " "
+      <literal>
+        val "attributeName"
+      " "
+      <emphasis>
+         "Field name"
+      " "
+      <literal>
+        val "txtName"

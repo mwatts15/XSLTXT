@@ -1,0 +1,37 @@
+stylesheet "1.0"
+
+import "common.txt"
+
+output .method "html"
+
+tpl .match "sku" .mode "header"
+  call "columnHeader" ("elem":"sku_qty")
+  call "columnHeader" ("elem":"sku_prod_type")
+  call "columnHeader"
+    param "text"
+      "ORDER NUM"
+  call "columnHeader"
+    param "text"
+      "DPS NUM"
+  call "columnHeader"
+    param "text"
+      "TOTAL WT"
+  call "columnHeader"
+    param "text"
+      "ADDR NAME"
+
+tpl .match "sku" .mode "row"
+  <tr>
+    <td>
+      val "sku_qty"
+    <td>
+      val "sku_prod_type"
+    <td>
+      val "../@order_num"
+    <td>
+      val "../@dps_num"
+    <td>
+      val "sku_qty * sku_weight"
+    <td>
+      val "ret_addr_code"
+

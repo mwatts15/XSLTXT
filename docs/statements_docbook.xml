@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE article PUBLIC "http://www.oasis-open.org/docbook/xml/simple/4.1.2.5/sdocbook.dtd" "../sdocbook.dtd">
+<article>
+<articleinfo>
+<title>TXTXSLT Statements</title>
+</articleinfo>
+<section>
+<title>Statement descriptions</title>
+<section>
+<title>apply</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>apply-templates</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>select</literal> <emphasis>Field name</emphasis> <literal>.select</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>mode</literal> <emphasis>Field name</emphasis> <literal>.mode</literal>
+</para>
+</listitem>
+</itemizedlist>
+<para>An example of using apply</para>
+<programlisting>apply .select "statement"
+  sort .by "txtName"
+
+apply .select "requiredFields/field" .mode "required"</programlisting>
+</section>
+<section>
+<title>apply-imports</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>apply-imports</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>An example of using apply-imports</para>
+<programlisting>choose
+  when "$ischunk = 1"
+    call "process-chunk-element"
+  otherwise
+    apply-imports</programlisting>
+</section>
+<section>
+<title>attribute</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>attribute</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>namespace</literal> <emphasis>Field name</emphasis> <literal>namespace</literal>
+</para>
+</listitem>
+</itemizedlist>
+<para>An example of using attribute</para>
+<programlisting>&lt;a&gt;
+  attribute "href"
+    call "href.target" ("object":"$target[1]")</programlisting>
+</section>
+<section>
+<title>attribute-set</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>attribute-set</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>use-attribute-sets</literal> <emphasis>Field name</emphasis> <literal>.use-attribute-sets</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>call</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>call-template</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>An example of using call</para>
+<programlisting>call "href.target" ("object":"$target[1]")
+
+call "gentext.template" ("context":"'msgset'", "name":"'MsgLevel'"
+
+call "section.heading"
+  param "level" .select "2"
+  param "title"
+    apply .select "." .mode "object.title.markup"</programlisting>
+</section>
+<section>
+<title>cdata</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>text</literal>
+</para>
+<para>This statement has no required fields.</para>
+</section>
+<section>
+<title>choose</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>choose</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>An example of using choose</para>
+<programlisting>choose
+  when "count(requiredFields) &gt; 1"
+    &lt;para&gt;
+      "There are some required fields"
+  when "count(requiredFields) = 1"
+    &lt;para&gt;
+      "There is one required field"
+  otherwise
+    &lt;para&gt;
+      "No required fields"</programlisting>
+</section>
+<section>
+<title>comment</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>comment</literal>
+</para>
+<para>This statement has no required fields.</para>
+</section>
+<section>
+<title>copy</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>copy</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>use-attribute-sets</literal> <emphasis>Field name</emphasis> <literal>.use-attribute-sets</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>copy-of</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>copy-of</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>select</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>An example of using copy-of</para>
+<programlisting>choose
+  when "$localinfo != ''"
+    var "node" .select "$outline//*[@id=$localinfo]"
+    copy-of "$node/xref"
+  otherwise
+    val "$outline/xref"
+</programlisting>
+</section>
+<section>
+<title>decimal</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>decimal-format</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal> <emphasis>Field name</emphasis> <literal>.name</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>decimal-separator</literal> <emphasis>Field name</emphasis> <literal>.decimal-sep</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>grouping-separator</literal> <emphasis>Field name</emphasis> <literal>.group-sep</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>infinity</literal> <emphasis>Field name</emphasis> <literal>.infinity</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>minus-sign</literal> <emphasis>Field name</emphasis> <literal>.minus-sign</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>NaN</literal> <emphasis>Field name</emphasis> <literal>.nan</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>percent</literal> <emphasis>Field name</emphasis> <literal>.percent</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>per-mille</literal> <emphasis>Field name</emphasis> <literal>.per-mille</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>zero-digit</literal> <emphasis>Field name</emphasis> <literal>.zero-digit</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>digit</literal> <emphasis>Field name</emphasis> <literal>.digit</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>pattern-separator</literal> <emphasis>Field name</emphasis> <literal>.pattern-sep</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>element</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>element</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>namespace</literal> <emphasis>Field name</emphasis> <literal>namespace</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>use-attribute-sets</literal> <emphasis>Field name</emphasis> <literal>.use-attribute-sets</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>fallback</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>fallback</literal>
+</para>
+<para>This statement has no required fields.</para>
+</section>
+<section>
+<title>for-each</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>for-each</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>select</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>if</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>if</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>test</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>import</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>import</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>href</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>include</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>include</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>href</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>key</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>key</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>match</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>use</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>msg</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>message</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>terminate</literal> <emphasis>Field name</emphasis> <literal/>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>msg-fatal</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>message</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>terminate</literal> <emphasis>Field name</emphasis> <literal/>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>namespace</title>
+<para>
+<emphasis>XML Element</emphasis> This statement has no corresponding xml element.</para>
+<para>This statement has no required fields.</para>
+</section>
+<section>
+<title>namespace-alias</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>namespace-alias</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>stylesheet-prefix</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>result-prefix</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>number</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>number</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>level</literal> <emphasis>Field name</emphasis> <literal>.level</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>count</literal> <emphasis>Field name</emphasis> <literal>.count</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>from</literal> <emphasis>Field name</emphasis> <literal>.from</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>value</literal> <emphasis>Field name</emphasis> <literal>val</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>format</literal> <emphasis>Field name</emphasis> <literal>.format</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>lang</literal> <emphasis>Field name</emphasis> <literal>.lang</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>letter-value</literal> <emphasis>Field name</emphasis> <literal>.letter-value</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>grouping-separator</literal> <emphasis>Field name</emphasis> <literal>.group-sep</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>grouping-size</literal> <emphasis>Field name</emphasis> <literal>.group-size</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>otherwise</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>otherwise</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>An example of using otherwise</para>
+<programlisting>choose
+  when "count(requiredFields) &gt; 1"
+    &lt;para&gt;
+      "There are some required fields"
+  when "count(requiredFields) = 1"
+    &lt;para&gt;
+      "There is one required field"
+  otherwise
+    &lt;para&gt;
+      "No required fields"</programlisting>
+</section>
+<section>
+<title>output</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>output</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>method</literal> <emphasis>Field name</emphasis> <literal>.method</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>version</literal> <emphasis>Field name</emphasis> <literal>.version</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>encoding</literal> <emphasis>Field name</emphasis> <literal>.encoding</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>omit-xml-declaration</literal> <emphasis>Field name</emphasis> <literal>.omit-xml-declaration</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>standalone</literal> <emphasis>Field name</emphasis> <literal>.standalone</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>doctype-public</literal> <emphasis>Field name</emphasis> <literal>.doctype-public</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>doctype-system</literal> <emphasis>Field name</emphasis> <literal>.doctype-system</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>cdata-section-elements</literal> <emphasis>Field name</emphasis> <literal>.cdata-section-elements</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>indent</literal> <emphasis>Field name</emphasis> <literal>.indent</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>media-type</literal> <emphasis>Field name</emphasis> <literal>.media-type</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>param</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>with-param</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>select</literal> <emphasis>Field name</emphasis> <literal>.select</literal>
+</para>
+</listitem>
+</itemizedlist>
+<para>An example of using param</para>
+<programlisting>call "columnTemplate" ("title"%"One", "value":"@cost")
+
+call "columnTemplate"
+  param "title"
+    "One"
+  param "value" .select "@cost"</programlisting>
+</section>
+<section>
+<title>preserve</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>preserve-space</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>elements</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>processing-instruction</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>processing-instruction</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>sort</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>sort</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>select</literal> <emphasis>Field name</emphasis> <literal>.by</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>lang</literal> <emphasis>Field name</emphasis> <literal>.lang</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>data-type</literal> <emphasis>Field name</emphasis> <literal>.data-type</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>order</literal> <emphasis>Field name</emphasis> <literal>.order</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>case-order</literal> <emphasis>Field name</emphasis> <literal>.case-order</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>strip</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>strip-space</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>elements</literal>
+</para>
+</listitem>
+</orderedlist>
+</section>
+<section>
+<title>stylesheet</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>stylesheet</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>version</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>id</literal> <emphasis>Field name</emphasis> <literal>.id</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>extension-element-prefixes</literal> <emphasis>Field name</emphasis> <literal>.extension-element-prefixes</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>exclude-result-prefixes</literal> <emphasis>Field name</emphasis> <literal>.exclude-result-prefixes</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>tpl</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>template</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal> <emphasis>Field name</emphasis> <literal>.name</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>match</literal> <emphasis>Field name</emphasis> <literal>.match</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>mode</literal> <emphasis>Field name</emphasis> <literal>.mode</literal>
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>priority</literal> <emphasis>Field name</emphasis> <literal>.priority</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>tx</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>text</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>disable-output-escaping</literal> <emphasis>Field name</emphasis> <literal/>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>tx-no-esc</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>text</literal>
+</para>
+<para>This statement has no required fields.</para>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>disable-output-escaping</literal> <emphasis>Field name</emphasis> <literal/>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>val</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>value-of</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>select</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>disable-output-escaping</literal> <emphasis>Field name</emphasis> <literal/>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>val-no-esc</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>value-of</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>select</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>disable-output-escaping</literal> <emphasis>Field name</emphasis> <literal/>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>var</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>variable</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>name</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</para>
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>select</literal> <emphasis>Field name</emphasis> <literal>.select</literal>
+</para>
+</listitem>
+</itemizedlist>
+</section>
+<section>
+<title>when</title>
+<para>
+<emphasis>XML Element</emphasis> <literal>when</literal>
+</para>
+<para>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</para>
+<orderedlist>
+<listitem>
+<para>
+<emphasis>Attribute name</emphasis> <literal>test</literal>
+</para>
+</listitem>
+</orderedlist>
+<para>An example of using when</para>
+<programlisting>choose
+  when "count(requiredFields) &gt; 1"
+    &lt;para&gt;
+      "There are some required fields"
+  when "count(requiredFields) = 1"
+    &lt;para&gt;
+      "There is one required field"
+  otherwise
+    &lt;para&gt;
+      "No required fields"</programlisting>
+</section>
+</section>
+</article>

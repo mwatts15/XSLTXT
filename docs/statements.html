@@ -1,0 +1,290 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>TXTXSLT Statements</title><meta content="DocBook XSL Stylesheets V1.47" name="generator"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><h1 class="title"><a name="N10001"></a>TXTXSLT Statements</h1></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><a href="#N10008">Statement descriptions</a></dt><dd><dl><dt><a href="#N1000B">apply</a></dt><dt><a href="#N10043">apply-imports</a></dt><dt><a href="#N10056">attribute</a></dt><dt><a href="#N1008A">attribute-set</a></dt><dt><a href="#N100B9">call</a></dt><dt><a href="#N100D9">cdata</a></dt><dt><a href="#N100E7">choose</a></dt><dt><a href="#N100FA">comment</a></dt><dt><a href="#N10108">copy</a></dt><dt><a href="#N1012A">copy-of</a></dt><dt><a href="#N1014A">decimal</a></dt><dt><a href="#N10216">element</a></dt><dt><a href="#N10256">fallback</a></dt><dt><a href="#N10264">for-each</a></dt><dt><a href="#N1027F">if</a></dt><dt><a href="#N1029A">import</a></dt><dt><a href="#N102B5">include</a></dt><dt><a href="#N102D0">key</a></dt><dt><a href="#N102FF">msg</a></dt><dt><a href="#N10320">msg-fatal</a></dt><dt><a href="#N10341">namespace</a></dt><dt><a href="#N1034B">namespace-alias</a></dt><dt><a href="#N10370">number</a></dt><dt><a href="#N1041A">otherwise</a></dt><dt><a href="#N1042D">output</a></dt><dt><a href="#N104E8">param</a></dt><dt><a href="#N1051C">preserve</a></dt><dt><a href="#N10537">processing-instruction</a></dt><dt><a href="#N10552">sort</a></dt><dt><a href="#N105B8">strip</a></dt><dt><a href="#N105D3">stylesheet</a></dt><dt><a href="#N10624">tpl</a></dt><dt><a href="#N10679">tx</a></dt><dt><a href="#N1069A">tx-no-esc</a></dt><dt><a href="#N106BB">val</a></dt><dt><a href="#N106E9">val-no-esc</a></dt><dt><a href="#N10717">var</a></dt><dt><a href="#N10746">when</a></dt></dl></dd></dl></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10008"></a>Statement descriptions</h2></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1000B"></a>apply</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>apply-templates</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>select</tt> <span class="emphasis"><i>Field name</i></span> <tt>.select</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>mode</tt> <span class="emphasis"><i>Field name</i></span> <tt>.mode</tt>
+</p></li></ul></div><p>An example of using apply</p><pre class="programlisting">apply .select "statement"
+  sort .by "txtName"
+
+apply .select "requiredFields/field" .mode "required"</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10043"></a>apply-imports</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>apply-imports</tt>
+</p><p>This statement has no required fields.</p><p>An example of using apply-imports</p><pre class="programlisting">choose
+  when "$ischunk = 1"
+    call "process-chunk-element"
+  otherwise
+    apply-imports</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10056"></a>attribute</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>attribute</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt>
+</p></li></ol></div><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>namespace</tt> <span class="emphasis"><i>Field name</i></span> <tt>namespace</tt>
+</p></li></ul></div><p>An example of using attribute</p><pre class="programlisting">&lt;a&gt;
+  attribute "href"
+    call "href.target" ("object":"$target[1]")</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1008A"></a>attribute-set</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>attribute-set</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt>
+</p></li></ol></div><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>use-attribute-sets</tt> <span class="emphasis"><i>Field name</i></span> <tt>.use-attribute-sets</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N100B9"></a>call</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>call-template</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt>
+</p></li></ol></div><p>An example of using call</p><pre class="programlisting">call "href.target" ("object":"$target[1]")
+
+call "gentext.template" ("context":"'msgset'", "name":"'MsgLevel'"
+
+call "section.heading"
+  param "level" .select "2"
+  param "title"
+    apply .select "." .mode "object.title.markup"</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N100D9"></a>cdata</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>text</tt>
+</p><p>This statement has no required fields.</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N100E7"></a>choose</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>choose</tt>
+</p><p>This statement has no required fields.</p><p>An example of using choose</p><pre class="programlisting">choose
+  when "count(requiredFields) &gt; 1"
+    &lt;para&gt;
+      "There are some required fields"
+  when "count(requiredFields) = 1"
+    &lt;para&gt;
+      "There is one required field"
+  otherwise
+    &lt;para&gt;
+      "No required fields"</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N100FA"></a>comment</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>comment</tt>
+</p><p>This statement has no required fields.</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10108"></a>copy</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>copy</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>use-attribute-sets</tt> <span class="emphasis"><i>Field name</i></span> <tt>.use-attribute-sets</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1012A"></a>copy-of</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>copy-of</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>select</tt>
+</p></li></ol></div><p>An example of using copy-of</p><pre class="programlisting">choose
+  when "$localinfo != ''"
+    var "node" .select "$outline//*[@id=$localinfo]"
+    copy-of "$node/xref"
+  otherwise
+    val "$outline/xref"
+</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1014A"></a>decimal</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>decimal-format</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt> <span class="emphasis"><i>Field name</i></span> <tt>.name</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>decimal-separator</tt> <span class="emphasis"><i>Field name</i></span> <tt>.decimal-sep</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>grouping-separator</tt> <span class="emphasis"><i>Field name</i></span> <tt>.group-sep</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>infinity</tt> <span class="emphasis"><i>Field name</i></span> <tt>.infinity</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>minus-sign</tt> <span class="emphasis"><i>Field name</i></span> <tt>.minus-sign</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>NaN</tt> <span class="emphasis"><i>Field name</i></span> <tt>.nan</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>percent</tt> <span class="emphasis"><i>Field name</i></span> <tt>.percent</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>per-mille</tt> <span class="emphasis"><i>Field name</i></span> <tt>.per-mille</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>zero-digit</tt> <span class="emphasis"><i>Field name</i></span> <tt>.zero-digit</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>digit</tt> <span class="emphasis"><i>Field name</i></span> <tt>.digit</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>pattern-separator</tt> <span class="emphasis"><i>Field name</i></span> <tt>.pattern-sep</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10216"></a>element</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>element</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt>
+</p></li></ol></div><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>namespace</tt> <span class="emphasis"><i>Field name</i></span> <tt>namespace</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>use-attribute-sets</tt> <span class="emphasis"><i>Field name</i></span> <tt>.use-attribute-sets</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10256"></a>fallback</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>fallback</tt>
+</p><p>This statement has no required fields.</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10264"></a>for-each</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>for-each</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>select</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1027F"></a>if</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>if</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>test</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1029A"></a>import</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>import</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>href</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N102B5"></a>include</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>include</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>href</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N102D0"></a>key</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>key</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>match</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>use</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N102FF"></a>msg</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>message</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>terminate</tt> <span class="emphasis"><i>Field name</i></span> <tt></tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10320"></a>msg-fatal</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>message</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>terminate</tt> <span class="emphasis"><i>Field name</i></span> <tt></tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10341"></a>namespace</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> This statement has no corresponding xml element.</p><p>This statement has no required fields.</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1034B"></a>namespace-alias</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>namespace-alias</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>stylesheet-prefix</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>result-prefix</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10370"></a>number</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>number</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>level</tt> <span class="emphasis"><i>Field name</i></span> <tt>.level</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>count</tt> <span class="emphasis"><i>Field name</i></span> <tt>.count</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>from</tt> <span class="emphasis"><i>Field name</i></span> <tt>.from</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>value</tt> <span class="emphasis"><i>Field name</i></span> <tt>val</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>format</tt> <span class="emphasis"><i>Field name</i></span> <tt>.format</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>lang</tt> <span class="emphasis"><i>Field name</i></span> <tt>.lang</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>letter-value</tt> <span class="emphasis"><i>Field name</i></span> <tt>.letter-value</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>grouping-separator</tt> <span class="emphasis"><i>Field name</i></span> <tt>.group-sep</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>grouping-size</tt> <span class="emphasis"><i>Field name</i></span> <tt>.group-size</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1041A"></a>otherwise</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>otherwise</tt>
+</p><p>This statement has no required fields.</p><p>An example of using otherwise</p><pre class="programlisting">choose
+  when "count(requiredFields) &gt; 1"
+    &lt;para&gt;
+      "There are some required fields"
+  when "count(requiredFields) = 1"
+    &lt;para&gt;
+      "There is one required field"
+  otherwise
+    &lt;para&gt;
+      "No required fields"</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1042D"></a>output</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>output</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>method</tt> <span class="emphasis"><i>Field name</i></span> <tt>.method</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>version</tt> <span class="emphasis"><i>Field name</i></span> <tt>.version</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>encoding</tt> <span class="emphasis"><i>Field name</i></span> <tt>.encoding</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>omit-xml-declaration</tt> <span class="emphasis"><i>Field name</i></span> <tt>.omit-xml-declaration</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>standalone</tt> <span class="emphasis"><i>Field name</i></span> <tt>.standalone</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>doctype-public</tt> <span class="emphasis"><i>Field name</i></span> <tt>.doctype-public</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>doctype-system</tt> <span class="emphasis"><i>Field name</i></span> <tt>.doctype-system</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>cdata-section-elements</tt> <span class="emphasis"><i>Field name</i></span> <tt>.cdata-section-elements</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>indent</tt> <span class="emphasis"><i>Field name</i></span> <tt>.indent</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>media-type</tt> <span class="emphasis"><i>Field name</i></span> <tt>.media-type</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N104E8"></a>param</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>with-param</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt>
+</p></li></ol></div><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>select</tt> <span class="emphasis"><i>Field name</i></span> <tt>.select</tt>
+</p></li></ul></div><p>An example of using param</p><pre class="programlisting">call "columnTemplate" ("title"%"One", "value":"@cost")
+
+call "columnTemplate"
+  param "title"
+    "One"
+  param "value" .select "@cost"</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1051C"></a>preserve</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>preserve-space</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>elements</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10537"></a>processing-instruction</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>processing-instruction</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10552"></a>sort</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>sort</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>select</tt> <span class="emphasis"><i>Field name</i></span> <tt>.by</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>lang</tt> <span class="emphasis"><i>Field name</i></span> <tt>.lang</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>data-type</tt> <span class="emphasis"><i>Field name</i></span> <tt>.data-type</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>order</tt> <span class="emphasis"><i>Field name</i></span> <tt>.order</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>case-order</tt> <span class="emphasis"><i>Field name</i></span> <tt>.case-order</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N105B8"></a>strip</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>strip-space</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>elements</tt>
+</p></li></ol></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N105D3"></a>stylesheet</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>stylesheet</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>version</tt>
+</p></li></ol></div><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>id</tt> <span class="emphasis"><i>Field name</i></span> <tt>.id</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>extension-element-prefixes</tt> <span class="emphasis"><i>Field name</i></span> <tt>.extension-element-prefixes</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>exclude-result-prefixes</tt> <span class="emphasis"><i>Field name</i></span> <tt>.exclude-result-prefixes</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10624"></a>tpl</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>template</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt> <span class="emphasis"><i>Field name</i></span> <tt>.name</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>match</tt> <span class="emphasis"><i>Field name</i></span> <tt>.match</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>mode</tt> <span class="emphasis"><i>Field name</i></span> <tt>.mode</tt>
+</p></li><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>priority</tt> <span class="emphasis"><i>Field name</i></span> <tt>.priority</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10679"></a>tx</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>text</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>disable-output-escaping</tt> <span class="emphasis"><i>Field name</i></span> <tt></tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N1069A"></a>tx-no-esc</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>text</tt>
+</p><p>This statement has no required fields.</p><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>disable-output-escaping</tt> <span class="emphasis"><i>Field name</i></span> <tt></tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N106BB"></a>val</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>value-of</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>select</tt>
+</p></li></ol></div><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>disable-output-escaping</tt> <span class="emphasis"><i>Field name</i></span> <tt></tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N106E9"></a>val-no-esc</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>value-of</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>select</tt>
+</p></li></ol></div><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>disable-output-escaping</tt> <span class="emphasis"><i>Field name</i></span> <tt></tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10717"></a>var</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>variable</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>name</tt>
+</p></li></ol></div><p>This statement has the following optional fields. These can be provided in any order. Each shows the xml attribute name and the txt field name to use</p><div class="itemizedlist"><ul><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>select</tt> <span class="emphasis"><i>Field name</i></span> <tt>.select</tt>
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10746"></a>when</h3></div></div><p>
+<span class="emphasis"><i>XML Element</i></span> <tt>when</tt>
+</p><p>This statement has some required fields. Their values must be provided in the order shown below. Each field corresponds to an xml attribute the name of which is shown.</p><div class="orderedlist"><ol type=""><li><p>
+<span class="emphasis"><i>Attribute name</i></span> <tt>test</tt>
+</p></li></ol></div><p>An example of using when</p><pre class="programlisting">choose
+  when "count(requiredFields) &gt; 1"
+    &lt;para&gt;
+      "There are some required fields"
+  when "count(requiredFields) = 1"
+    &lt;para&gt;
+      "There is one required field"
+  otherwise
+    &lt;para&gt;
+      "No required fields"</pre></div></div></div></body></html>

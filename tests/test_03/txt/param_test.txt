@@ -1,0 +1,20 @@
+stylesheet "1.0"
+
+output .method "text"
+
+tpl .match "resultSet/record"
+  call "called_tpl" ("p1":"column[@name='USER_NAME']", 
+                     "p2"%"Format One",
+  call "called_tpl"
+    param "p1" .select "column[@name='USER_NAME']"
+    param "p2"
+      "Format Two"
+  call "called_tpl" ("p1":"column[@name='USER_NAME']")
+
+tpl .name "called_tpl" ("p1", "p2"%"Format Three")
+  "\n"
+  "Calling "
+  val "$p1"
+  " with format "
+  val "$p2"
+  "\n"

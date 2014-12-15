@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<return>
+<order sku_count="3" order_num="234567891" dps_num="3333" cust_po_num="" co_num="DSB" lob_code="222">
+	<sku>
+		<sku_id desc="SKU ID">111-2332</sku_id> 
+		<sku_qty desc="Qty">3</sku_qty> 
+		<sku_weight desc="Unit Weight (lbs)">20</sku_weight>
+		<sku_prod_type desc="Product Type">SYS</sku_prod_type>
+		<ret_addr_code desc="Address Code">BRAKER_K</ret_addr_code> 
+		<sku_item_class /> 
+		<sku_desc desc="Description" /> 
+	</sku> 
+	<sku>
+		<sku_id desc="SKU ID">312-D874</sku_id>
+		<sku_qty desc="Qty">4</sku_qty>
+		<sku_weight desc="Unit Weight (lbs)">50</sku_weight>
+		<sku_prod_type desc="Product Type">DMON</sku_prod_type>
+		<ret_addr_code desc="Address Code">D1</ret_addr_code> 
+		<sku_item_class /> 
+		<sku_desc desc="Description" />
+	</sku>
+	<sku>
+		<sku_id desc="SKU ID">MO873</sku_id>
+		<sku_qty desc="Qty">2</sku_qty>
+		<sku_weight desc="Unit Weight (lbs)">30</sku_weight>
+		<sku_prod_type desc="Product Type">SP</sku_prod_type>
+		<ret_addr_code desc="Address Code">IML</ret_addr_code> 
+		<sku_item_class />
+		<sku_desc desc="Description" /> 
+	</sku>
+</order>
+<order sku_count="1" order_num="345678912" dps_num="88888" cust_po_num="" co_num="EDU" lob_code="333">
+	<sku>
+		<sku_id desc="SKU ID">320-5684</sku_id>
+		<sku_qty desc="Qty">1</sku_qty>
+		<sku_weight desc="Unit Weight (lbs)">40</sku_weight>
+		<sku_prod_type desc="Product Type">SYS</sku_prod_type>
+		<ret_addr_code desc="Address Code">BRAKER_K</ret_addr_code> 
+		<sku_item_class /> 
+		<sku_desc desc="Description" /> 
+	</sku>
+</order>
+</return>

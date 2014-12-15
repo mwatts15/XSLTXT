@@ -1,0 +1,46 @@
+stylesheet "1.0"
+
+tpl .match "/"
+  <html>
+    <head>
+      <title> "Testing"
+    <body>
+      apply .select "return"
+
+tpl .match "return"
+  <table border="1">
+    apply .select "order[1]/sku[1]" .mode "header"
+    call "tableBody"
+  call "tableFooter"
+
+tpl .name "tableBody"      
+  apply .select "order/sku" .mode "row"
+
+tpl .name "tableFooter"
+  <p>
+    "No of Boxes = "
+    val "sum(order/sku/sku_qty)"
+  <p>
+    "Total Weight(lbs) = "
+    call "totalWeight"
+      param "elem" .select "order/sku"
+      param "total-so-far"
+       "0"
+
+tpl .name "totalWeight" ("elem", "total-so-far")
+  choose
+    when "$elem"
+      call "totalWeight"
+        ("elem":"$elem/following::sku",
+         "total-so-far":"$total-so-far + ($elem[1]/sku_qty * $elem[1]/sku_weight)")
+    otherwise
+      val "$total-so-far"      
+
+tpl .name "columnHeader" ("elem", "text")
+  <th>
+    choose
+      when "$elem"
+        val "$elem/@desc"
+      otherwise
+        val "$text"
+

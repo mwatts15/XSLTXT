@@ -1,0 +1,45 @@
+stylesheet "1.0"
+
+import "common.txt"
+
+output .method "html"
+
+tpl .match "sku" .mode "header"
+  call "columnHeader" ("elem":"sku_qty")
+  call "columnHeader" ("elem":"sku_prod_type")
+  call "columnHeader"
+    param "text"
+      "TOTAL WT"
+    
+tpl .name "tableBody"
+  for-each "order/sku/sku_prod_type"
+    sort .by "."
+    var "this" .select "text()"
+    var "next" .select "following::sku_prod_type[text() = $this]"
+    if "not($next)"
+      call "tableRow" ("prod-type":"$this")
+
+tpl .name "tableRow" ("prod-type")
+  <tr>
+    call "tableRowData" ("prod-type":"$prod-type",
+                         "elem":"//order/sku[sku_prod_type = $prod-type]")
+
+tpl .name "tableRowData" ("prod-type", "elem")
+  <td>
+    val "sum($elem/sku_qty)"
+  <td>
+    val "$elem[1]/sku_prod_type"
+  <td>
+    call "totalWeightProduct" ("prod-type":"$prod-type",
+                               "elem":"$elem", "total-so-far":"0")
+
+tpl .name "totalWeightProduct" ("prod-type", "elem", "total-so-far")
+  choose
+    when "$elem"
+      call "totalWeightProduct"
+        ("prod-type":"$prod-type",
+	 "elem":"$elem/following::sku[sku_prod_type = $prod-type]",
+         "total-so-far":"$total-so-far + ($elem[1]/sku_qty * $elem[1]/sku_weight)")
+    otherwise
+      val "$total-so-far"      
+

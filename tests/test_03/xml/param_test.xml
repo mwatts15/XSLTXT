@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resultSet recordCount="9" columnCount="3">
+  <record>
+    <column name="USER_NAME">ehorton</column>
+    <column name="STAGE">1</column>
+    <column name="COUNT(*)">1</column>
+  </record>
+  <record>
+    <column name="USER_NAME">ehorton</column>
+    <column name="STAGE">2</column>
+    <column name="COUNT(*)">2</column>
+  </record>
+  <record>
+    <column name="USER_NAME">ehorton</column>
+    <column name="STAGE">3</column>
+    <column name="COUNT(*)">1</column>
+  </record>
+  <record>
+    <column name="USER_NAME">sharir</column>
+    <column name="STAGE">1</column>
+    <column name="COUNT(*)">9</column>
+  </record>
+  <record>
+    <column name="USER_NAME">sharir</column>
+    <column name="STAGE">2</column>
+    <column name="COUNT(*)">3</column>
+  </record>
+  <record>
+    <column name="USER_NAME">user1</column>
+    <column name="STAGE">1</column>
+    <column name="COUNT(*)">2</column>
+  </record>
+  <record>
+    <column name="USER_NAME">user1</column>
+    <column name="STAGE">2</column>
+    <column name="COUNT(*)">1</column>
+  </record>
+  <record>
+    <column name="USER_NAME">user1</column>
+    <column name="STAGE">4</column>
+    <column name="COUNT(*)">1</column>
+  </record>
+  <record>
+    <column name="USER_NAME">user3</column>
+    <column name="STAGE" />
+    <column name="COUNT(*)">1</column>
+  </record>
+</resultSet>

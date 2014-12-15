@@ -1,0 +1,43 @@
+stylesheet "1.0"
+
+output .method "html" .omit-xml-declaration "yes"
+
+tpl .match "resultSet"
+  for-each "record/column[1]"
+    sort .by "."
+    var "this" .select "text()"
+    var "next" .select "following::column[text() = $this]"
+    if "not($next)"
+      call "tableRow" ("user":"$this")
+
+tpl .name "tableRow" ("user")
+  var "id"
+    val "position()"
+  <tr>
+    attribute "id"
+      val "$id"
+    attribute "onClick"
+      "SelectRow("
+      val "$id"
+      ")"
+    <td class="header1">
+      val "$user"
+    call "stageCell"
+      param "user" .select "$user"
+      param "stage"
+        "1"
+    <td class="silver">
+      val "sum(/resultSet/record[column[1] = $user and column[2] != '']/column[3])"    
+
+tpl .name "stageCell" ("user", "stage")
+  choose
+    when "$stage < 5"
+      var "count"
+        val "/resultSet/record[column[1] = $user and column[2] = $stage]/column[3]"
+      <td class="white">
+        choose
+          when "$count != ''"
+            val "$count"
+          otherwise
+            "0"
+      call "stageCell" ("user":"$user", "stage":"$stage + 1")

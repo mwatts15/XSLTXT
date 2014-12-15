@@ -1,0 +1,158 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>XSLTXT : An alternative XSLT syntax</title><meta content="DocBook XSL Stylesheets V1.47" name="generator"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><h1 class="title"><a name="N10002"></a>XSLTXT : An alternative XSLT syntax</h1></div><div><h3 class="author">Alex Moffat</h3></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><a href="#N1000F">Why a different syntax?</a></dt><dt><a href="#N10026">Basic principles</a></dt><dt><a href="#N10115">Using the alternative syntax.</a></dt><dd><dl><dt><a href="#N10118">Converting from XSLTXT to XSLT.</a></dt><dt><a href="#N10125">Converting from XML to XSLTXT.</a></dt><dt><a href="#N10132">Using XSLTXT in place of XSLT via TXTReader.</a></dt></dl></dd></dl></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N1000F"></a>Why a different syntax?</h2></div></div><p>The XML syntax for XSLT is very easy to parse, as it's XML,
+    relatively easy to read, but tedious to write once you get past
+    the simplest transformations. I find that the semantics of XSLT
+    get swamped by the syntax of XML. For example, the number of
+    characters used for xml markup can be very large compared to the
+    number used for the actual semantics of the transformations. For
+    example, if you want to write a simple template with a name of foo
+    that takes two parameters and generates a statement like
+    <b>SELECT x FROM y</b> you can write the template
+    element below. This uses approximately 122 characters for markup
+    and 22 for meaning.</p><pre class="programlisting">
+      
+&lt;xsl:template name="foo"&gt;
+  &lt;xsl:param name="a"/&gt;
+  &lt;xsl:param name="b"/&gt;
+SELECT &lt;xsl:value-of select="$a"/&gt; FROM &lt;xsl:value-of select="$b"/&gt;
+&lt;/xsl:template&gt;
+    </pre><p>In contrast the alternative syntax can express this using
+    only 31 characters of markup and 22 characters for meaning, as
+    shown below. I hope that this makes the meaning clearer and it is
+    certainly quicker to write.</p><pre class="programlisting">
+      
+tpl .name "foo" ("a", "b")
+  "SELECT "
+  val "$a"
+  " FROM "
+  val "$b"
+    </pre><p>XSLTXT makes no changes to XSLT semantics. The things that
+      are tedious to do in XSLT are still tedious in XSLTXT but at
+      least there is less typing. The advantage of this approach is
+      that in Java a <b>XMLReader</b> can be constructed
+      that will parse an XSLTXT file and produce SAX events as if an
+      XSLT file was being processed. XSLTXT can therefore be used in
+      place of XSLT without having to build another XSLT
+      processor.</p></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10026"></a>Basic principles</h2></div></div><p>XSLTXT does four things to try to reduce the number of markup
+      characters.</p><div class="itemizedlist"><ul><li>Use indentation to delimit the block structure instead of start and end markers.
+      </li><li>Reduce the length of some of the names used, for example <b>template</b> becomes <b>tpl</b></li><li>Required attributes no longer have attribute names, instead they are positional.
+      </li><li>In some situations <b>param</b> and
+      <b>with-param</b> statements can be written using
+      parentheses.
+      </li></ul></div><p>An XSLTXT stylesheet is made up of statements, modifiers,
+    comments, quoted text, XML elements, and whitespace.</p><div class="variablelist"><dl><dt><span class="term">Statements</span></dt><dd><p>Statements correspond to the elements in XSLT such as
+    <b>&lt;xsl:apply-templates/&gt;</b>. They often have
+    the same name as the element they represent. In some cases though
+    a shorter name is used to help make it easier to write and read
+    XSLTXT.</p></dd><dt><span class="term">Modifiers</span></dt><dd><p>Modifiers correspond to the optional attributes of the
+    XSLT elements. They are written with a leading period, and are
+    generally named the same as the attribute they represent. For
+    example, the <b>mode</b> attribute is represented by
+    the <b>.mode</b> modifier. The value of the attribute
+    is written as a quoted string following the modifier. So the XSLT
+    element <b>&lt;xsl:apply-templates
+    select="author/given-name"/&gt;</b> would be represented by
+    the XSLTXT statement <b>apply .select
+    "author/given-name"</b></p></dd><dt><span class="term">Comments</span></dt><dd><p>Comments start with a # as the first non whitespace character
+	  on a line and proceed to the end of the line.</p></dd><dt><span class="term">Quoted text</span></dt><dd><p>The value of any modifier or any text to be output must be
+	  surrounded by ". This is not the same as XSLT where any
+	  text not recognized as an XML element is output.</p></dd><dt><span class="term">XML elements</span></dt><dd><p>You can include XML elements in the stylesheet just as in
+	  XSL. However, you should not write the close element. For example in XSL
+	  you might write</p><pre class="programlisting">
+            
+&lt;first-name&gt;Bob&lt;/first-name&gt;
+	  </pre><p>but in XSLTXT you would write</p><pre class="programlisting">
+	    
+&lt;first-name&gt;
+  "Bob"
+	  </pre><p>instead as indentation is used to show the block structure of
+	  the element.</p></dd><dt><span class="term">Whitespace</span></dt><dd><p>is ignored</p></dd></dl></div><p>As with XSLT some XSLTXT statements can
+      <span class="emphasis"><i>contain</i></span> other statments. XSLTXT uses
+      indentation to mark its block structure in a similar way to
+      Python and Haskell so it does not need the end element markers
+      of XML. A XSLTXT statement includes all those statements whose
+    indentation is greater than it's own indentation. For example in the two
+    templates below</p><pre class="programlisting">
+      
+tpl .mode "client"
+  "Client "
+  val "@name"
+      
+tpl .mode "server"
+  "Server "
+  val "@host"        
+    </pre><p>It can be seen from the indentation that the first, with
+      <b>.mode "client"</b>, contains the string
+      <b>"Client "</b> and the statement <b>val
+      "@name"</b>, while the second, with <b>.mode
+      "server"</b> contains the string <b>"Server
+      "</b> and the statement <b>val
+      "@host"</b>.</p><p>Statements, modifiers and comments in XSLTXT are written
+      without quotes. Everything else is written in quotes.</p><p>Required attributes need no modifier, just a value. For example
+    the <b>import</b> element has a required attribute
+    <b>href</b>. In XSLTXT the value for this attribute
+    is placed directly after the statement with no modifier. So,
+    <b>&lt;xsl:import href="others.xsl"/&gt;</b> becomes
+    <b>import "others.txt"</b> If a statement has more than
+    one required attribute they must be entered in the correct order.</p><p>Optional attributes are preceeded by their name with a
+    period in front of it, for example the mode attribute of a
+    template statement would be written <b>.mode
+    "myMode"</b></p><p>Parameters, whether expressed in xsl as
+    <b>param</b> or <b>with-param</b> can be
+    represented in XSLTXT in two ways. The representation used
+    depends on how any parameter value is represented. The first
+    representation can be chosen if all of the
+    <b>param</b> or <b>with-param</b>
+    statements either have no value, use the <b>select</b>
+    attribute to provide a value, or if there value is only a text
+    string. This representation surrounds the parameters with
+    <b>(</b> and <b>)</b> and separates each
+    parameter name from its value, if it has one, with a
+    <b>:</b>jif the value is a select or a
+    <b>%</b> if the value is to be used as a text
+    value. So,</p><pre class="programlisting">
+      
+&lt;xsl:template name="bySize"&gt;
+  &lt;xsl:param name="height" select="@height"/&gt;
+  &lt;xsl:param name="weight" select="@weight"/&gt;
+  &lt;xsl:value-of select="$height"/&gt; * &lt;xsl:value-of select="$weight"/&gt;    
+&lt;/xsl:template&gt; 
+    </pre><p>would be shown in XSLTXT as</p><pre class="programlisting">
+      
+tpl .name "bySize" ("height":"@height", "weight":"@weight")
+  val "$height"
+  " * "
+  val "$weight" 
+    </pre><p>and a call to this template could be written</p><pre class="programlisting">
+      
+call "bySize" ("height":"@height", "weight"%"100")
+    </pre><p>if the weight was going to be passed as a string with a
+      value of 100. This would be written in xslt as</p><pre class="programlisting">
+      
+&lt;xsl:call-template name="bySize"&gt;
+  &lt;xsl:with-param name="height" select="@height"/&gt;
+  &lt;xsl:with-param name="weight"&gt;
+    &lt;xsl:text&gt;100&lt;/xsl:text&gt;
+  &lt;/xsl:with-param&gt;
+&lt;/xsl:call-template&gt;
+    </pre><p>If a parameter does not have a default value then the
+    <b>:</b> or <b>%</b> is not required. So
+    <b>&lt;xsl:param name="foo"/&gt;</b> would become
+    <b>("foo")</b></p><p>Handling of <b>import</b> and
+    <b>include</b> statements. During conversion from
+    XSLTXT to XSLT or vise versa the extension on urls being imported
+    or includes is swapped.</p></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10115"></a>Using the alternative syntax.</h2></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10118"></a>Converting from XSLTXT to XSLT.</h3></div></div><p>In the directory
+	<b>src/com/zanthan/xsltxt/examples</b> is an
+	example called <b>TXTConverter.java</b> that
+	demonstrates how to convert from XSLTXT to XSL. It has comments to
+	explain what the steps are and should form a good basis if you
+	want to program something similar yourself.</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10125"></a>Converting from XML to XSLTXT.</h3></div></div><p>In the directory
+	<b>src/com/zanthan/xsltxt/examples</b> is an
+	example called <b>XSLConverter.java</b> that
+	demonstrates how to convert from XSL to XSLTXT. It has
+	comments to explain what the steps are and should form a good
+	basis if you want to program something similar
+	yourself. </p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="N10132"></a>Using XSLTXT in place of XSLT via TXTReader.</h3></div></div><p>In the directory
+	<b>src/com/zanthan/xsltxt/examples</b> is an
+	example called <b>TXTStyler.java</b>. This
+	demonstrates how to use a TXTReaderTwo instance to process an
+	XSLTXT file directly into xsl style sheets.</p></div></div></div></body></html>

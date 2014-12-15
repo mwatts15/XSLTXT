@@ -1,0 +1,47 @@
+The code for xsltxt is licensed under the conditions of the
+Lesser GNU Public License. See the file COPYING for more information.
+
+xsltxt uses code licensed under a variety of other licenses. See the
+various LICENSE.* files.
+
+Very basic instructions. More to follow. If you have problems ask a
+question on savannah at https://savannah.gnu.org/projects/xsltxt/ in
+the support area.
+
+To compile and execute the code you'll need some addtional libararies
+and, of course, Ant (from http://jakarta.apache.org/ant/index.html)
+
+jdom.jar - From http://www.jdom.org (using version b8)
+
+junit.jar - From http://www.junit.org/index.htm (using version 3.7)
+
+log4j.jar - From http://jakarta.apache.org/log4j/docs/index.html
+(using version 1.2.7)
+
+xalan.jar, xercesImpl.jar and xml-apis.jar - From
+http://xml.apache.org/xalan-j/index.html (using version 2.3.1)
+
+ant.jar and optional.jar - From Ant (version 1.5.1) to provide the
+xsltxt task to ant.
+
+These should be copied into or linked into a directory called lib at
+the same level as build.xml. If you run the "prepare" target in
+build.xml the lib directory will be correctly created but you still
+need to do the copying or linking.
+
+The latest released versions of all of these packages will work for
+all stylesheets. There is a slight problem with the xerces the
+implementation of non default entity resolvers. In some situations the
+entity resolver will be passed a null publicId to the resolveEntity
+method. This is fixed in the current cvs sources for xerces. For now
+the BasicResolver.resolveEntity method in xsltxt issues a warning in
+this situation and returns null to invoke default resolution, which
+works fine.
+
+The very, very basic script runant.sh runs ant on my system. The only
+significance to this is the names used to pass arguments to the ant
+targets. These must match if you want to successfully execute some of
+the run... targets.
+
+Take a look at build.xml to see the available targets they have
+comments describing what they do.

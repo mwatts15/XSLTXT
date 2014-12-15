@@ -1,0 +1,414 @@
+<?xml version='1.0' ?>
+<project name="com.zanthan.xsl"
+  default="all">
+
+  <property name="zanthan.rootdir"
+    value="${basedir}"/>
+    
+  <property name="zanthan.src.dir"
+    value="${zanthan.rootdir}/src"/>
+
+  <property name="zanthan.properties.dir"
+    value="${zanthan.rootdir}/properties"/>
+
+  <property name="zanthan.log4j.properties"
+    value="${zanthan.properties.dir}/log4j.properties"/>
+  
+  <property name="zanthan.manifest"
+    value="${zanthan.properties.dir}/MANIFEST.MF"/>
+  
+  <property name="zanthan.classes.dir"
+    value="${zanthan.rootdir}/classes"/>
+
+  <property name="zanthan.lib.dir"
+    value="${zanthan.rootdir}/lib"/>
+
+  <property name="zanthan.dist.dir"
+    value="${zanthan.rootdir}/dist"/>
+
+  <property name="zanthan.depend.dir"
+    value="${zanthan.rootdir}/depcache"/>
+
+  <property name="zanthan.docs.dir"
+    value="${zanthan.rootdir}/docs"/>
+
+  <property name="zanthan.tests.dir"
+    value="${zanthan.rootdir}/tests"/>
+
+  <property name="zanthan.stylesheets.dir"
+    value="${zanthan.rootdir}/stylesheets"/>
+
+  <!-- I need to split this into two sections so that the -->
+  <!-- xml jar files come before the others so that the -->
+  <!-- version of jaxp I need is available. Just setting -->
+  <!-- the order isn't good enough. -->
+  <path id="zanthan.classpath.compile">
+    <fileset dir="${zanthan.lib.dir}">
+      <include name="xercesImpl.jar"/>      
+      <include name="xml-apis.jar"/> 
+      <include name="xalan.jar"/>
+    </fileset>
+    <fileset dir="${zanthan.lib.dir}">
+      <include name="ant.jar"/>
+      <include name="jdom.jar"/>      
+      <include name="junit.jar"/>
+      <include name="log4j.jar"/>
+    </fileset>
+  </path>
+
+  <path id="zanthan.classpath.run">
+    <path refid="zanthan.classpath.compile"/>
+    <pathelement path="${zanthan.classes.dir}"/>
+    <pathelement path="${zanthan.properties.dir}"/>
+  </path>
+
+  <target name="checkProperties">
+    <condition property="propertiesDirDefined">
+      <available file="${zanthan.log4j.properties}"/>
+    </condition>
+  </target>
+  
+  <target name="definePropertiesDir" unless="propertiesDirDefined">
+    <mkdir dir="${zanthan.properties.dir}"/>
+    <echo file="${zanthan.log4j.properties}">
+log4j.appender.A = org.apache.log4j.ConsoleAppender
+
+log4j.appender.A.layout = org.apache.log4j.PatternLayout
+log4j.appender.A.layout.ConversionPattern = %-4r %-5p [%t] %c - %m%n
+
+log4j.rootCategory=DEBUG, A
+    </echo>
+  </target>
+  
+  <target name="prepare"
+    depends="checkProperties, definePropertiesDir">
+    <mkdir dir="${zanthan.src.dir}"/>
+    <mkdir dir="${zanthan.classes.dir}"/>
+    <mkdir dir="${zanthan.lib.dir}"/>
+    <mkdir dir="${zanthan.dist.dir}"/>
+    <mkdir dir="${zanthan.docs.dir}"/>
+    <mkdir dir="${zanthan.stylesheets.dir}"/>
+  </target>
+
+  <target name="clean">
+    
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${zanthan.classes.dir}"/>
+      <fileset dir="${zanthan.dist.dir}"/>
+    </delete>
+
+  </target>
+
+  <target name="depend"
+    depends="prepare">
+
+    <depend srcdir="${zanthan.src.dir}"
+      destdir="${zanthan.classes.dir}"
+      cache="${zanthan.depend.dir}"/>
+    
+  </target>
+  
+  <target name="compile"
+    depends="prepare,depend">
+
+    <javac destdir="${zanthan.classes.dir}"
+           deprecation="true"
+           debug="true"
+           includeAntRuntime="false">
+      <src path="${zanthan.src.dir}"/>
+      <classpath refid="zanthan.classpath.compile"/>
+    </javac>
+
+    <copy todir="${zanthan.classes.dir}">
+      <fileset dir="${zanthan.src.dir}">
+	<include name="**/*.properties"/>
+      </fileset>
+    </copy>
+
+  </target>
+
+  <target name="buildSourceDistribution" depends="clean, prepare">
+
+    <tar tarfile="${zanthan.dist.dir}/xsltxt-src.tar">
+      <tarfileset dir="${zanthan.rootdir}">
+	<exclude name="**/CVS/*"/>
+	<include name="COPYING"/>
+	<include name="LICENSE.*"/>	
+	<include name="README"/>
+	<include name="build.xml"/>
+	<include name="src/"/>
+	<include name="docs/"/>
+	<include name="stylesheets/statements.txt"/>
+	<include name="${zanthan.log4.properties}"/>
+	<include name="${zanthan.manifest}"/>	
+	<include name="tests/"/>
+      </tarfileset>
+    </tar>
+    
+    <gzip src="${zanthan.dist.dir}/xsltxt-src.tar"
+          zipfile="${zanthan.dist.dir}/xsltxt-src.tar.gz"/>
+    
+  </target>
+
+  <target name="buildFullBinDistribution" depends="clean, prepare, compile">
+
+    <mkdir dir="${zanthan.dist.dir}/classes"/>
+
+    <copy todir="${zanthan.dist.dir}/classes">
+      <fileset dir="${zanthan.classes.dir}">
+	<include name="**/*.class"/>
+      </fileset>
+      <fileset dir="${zanthan.classes.dir}">
+	<include name="**/*.properties"/>
+      </fileset>
+      <fileset dir="${zanthan.properties.dir}">
+	<include name="log4j.properties"/>
+      </fileset>
+    </copy>
+
+    <unzip src="${zanthan.lib.dir}/xercesImpl.jar"
+           dest="${zanthan.dist.dir}/classes"/>
+
+    <unzip src="${zanthan.lib.dir}/xml-apis.jar"
+           dest="${zanthan.dist.dir}/classes"/>
+
+    <unzip src="${zanthan.lib.dir}/xalan.jar"
+           dest="${zanthan.dist.dir}/classes"/>
+
+    <unzip src="${zanthan.lib.dir}/jdom.jar"
+           dest="${zanthan.dist.dir}/classes"/>
+
+    <unzip src="${zanthan.lib.dir}/junit.jar"
+           dest="${zanthan.dist.dir}/classes"/>
+
+    <unzip src="${zanthan.lib.dir}/log4j.jar"
+           dest="${zanthan.dist.dir}/classes"/>
+
+    <unzip src="${zanthan.lib.dir}/ant.jar"
+           dest="${zanthan.dist.dir}/classes"/>
+
+    <delete dir="${zanthan.dist.dir}/classes/META-INF"/>
+
+    <jar jarfile="${zanthan.dist.dir}/xsltxt-bin-full.jar" manifest="${zanthan.manifest}">
+      <fileset dir="${zanthan.dist.dir}/classes"/>
+    </jar>
+
+    <gzip src="${zanthan.dist.dir}/xsltxt-bin-full.jar"
+          zipfile="${zanthan.dist.dir}/xsltxt-bin-full.jar.gz"/>
+
+    <delete dir="${zanthan.dist.dir}/classes"/>
+    
+  </target>
+
+  <target name="buildBinDistribution" depends="clean, prepare, compile">
+    <mkdir dir="${zanthan.dist.dir}/classes"/>
+
+    <copy todir="${zanthan.dist.dir}/classes">
+      <fileset dir="${zanthan.classes.dir}">
+	<include name="**/*.class"/>
+      </fileset>
+      <fileset dir="${zanthan.classes.dir}">
+	<include name="**/*.properties"/>
+      </fileset>
+      <fileset dir="${zanthan.properties.dir}">
+	<include name="log4j.properties"/>
+      </fileset>
+    </copy>
+
+    <jar jarfile="${zanthan.dist.dir}/xsltxt-bin.jar" manifest="${zanthan.manifest}">
+      <fileset dir="${zanthan.dist.dir}/classes"/>
+    </jar>
+
+    <gzip src="${zanthan.dist.dir}/xsltxt-bin.jar"
+          zipfile="${zanthan.dist.dir}/xsltxt-bin.jar.gz"/>
+
+    <delete dir="${zanthan.dist.dir}/classes"/>
+    
+  </target>
+  
+  <target name="buildDistribution"
+          depends="buildSourceDistribution, buildBinDistribution, buildFullBinDistribution"/>
+  
+  <target name="runXSLConverter"
+    depends="compile">
+
+    <java classname="com.zanthan.xsltxt.examples.XSLConverter" fork="yes">
+      <arg value="${arg1}"/>
+      <arg value="${arg2}"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+  </target>
+
+  <target name="runTXTConverter"
+    depends="compile">
+
+    <java classname="com.zanthan.xsltxt.examples.TXTConverter" fork="yes">
+      <arg value="${arg1}"/>
+      <arg value="${arg2}"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+  </target>
+
+  <target name="runTXTStyler"
+    depends="compile">
+
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${arg1}"/>
+      <arg value="${arg2}"/>
+      <arg value="${arg3}"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+  </target>
+
+  <target name="runXSLStyler"
+    depends="compile">
+
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${arg1}"/>
+      <arg value="${arg2}"/>
+      <arg value="${arg3}"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+  </target>
+
+  <target name="runStatementDescriptions"
+    depends="compile">
+
+    <java classname="com.zanthan.xsltxt.examples.StatementDescriptions" fork="yes">
+      <arg value="${arg1}"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+  </target>
+
+  <target name="test_01"
+    depends="compile">
+
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${zanthan.tests.dir}/test_01/xslresults"/>
+      <fileset dir="${zanthan.tests.dir}/test_01/txtresults"/>
+    </delete>
+
+    <mkdir dir="${zanthan.tests.dir}/test_01/xslresults"/>
+    <mkdir dir="${zanthan.tests.dir}/test_01/txtresults"/>
+
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_01/xsl/rpt1.xsl"/>
+      <arg value="${zanthan.tests.dir}/test_01/xml/test.xml"/>
+      <arg value="${zanthan.tests.dir}/test_01/xslresults/rpt1.html"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_01/xsl/rpt2.xsl"/>
+      <arg value="${zanthan.tests.dir}/test_01/xml/test.xml"/>
+      <arg value="${zanthan.tests.dir}/test_01/xslresults/rpt2.html"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_01/xsl/rpt3.xsl"/>
+      <arg value="${zanthan.tests.dir}/test_01/xml/test.xml"/>
+      <arg value="${zanthan.tests.dir}/test_01/xslresults/rpt3.html"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_01/txt/rpt1.txt"/>
+      <arg value="${zanthan.tests.dir}/test_01/xml/test.xml"/>
+      <arg value="${zanthan.tests.dir}/test_01/txtresults/rpt1.html"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_01/txt/rpt2.txt"/>
+      <arg value="${zanthan.tests.dir}/test_01/xml/test.xml"/>
+      <arg value="${zanthan.tests.dir}/test_01/txtresults/rpt2.html"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_01/txt/rpt3.txt"/>
+      <arg value="${zanthan.tests.dir}/test_01/xml/test.xml"/>
+      <arg value="${zanthan.tests.dir}/test_01/txtresults/rpt3.html"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+  </target>
+
+  <target name="test_02"
+    depends="compile">
+
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${zanthan.tests.dir}/test_02/xslresults"/>
+      <fileset dir="${zanthan.tests.dir}/test_02/txtresults"/>
+    </delete>
+
+    <mkdir dir="${zanthan.tests.dir}/test_02/xslresults"/>
+    <mkdir dir="${zanthan.tests.dir}/test_02/txtresults"/>
+
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_02/xsl/analyst.xsl"/>
+      <arg value="${zanthan.tests.dir}/test_02/xml/analyst.xml"/>
+      <arg value="${zanthan.tests.dir}/test_02/xslresults/analyst.html"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_02/txt/analyst.txt"/>
+      <arg value="${zanthan.tests.dir}/test_02/xml/analyst.xml"/>
+      <arg value="${zanthan.tests.dir}/test_02/txtresults/analyst.html"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+  </target>
+
+  <target name="test_03"
+    depends="compile">
+
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${zanthan.tests.dir}/test_03/xslresults"/>
+      <fileset dir="${zanthan.tests.dir}/test_03/txtresults"/>
+    </delete>
+
+    <mkdir dir="${zanthan.tests.dir}/test_03/xslresults"/>
+    <mkdir dir="${zanthan.tests.dir}/test_03/txtresults"/>
+
+    <!-- Delete the xsl file as it is generated from the txt one -->
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${zanthan.tests.dir}/test_03/xsl"/>
+    </delete>
+
+    <mkdir dir="${zanthan.tests.dir}/test_03/xsl"/>
+
+    <!-- Use the txt stylesheet -->
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_03/txt/param_test.txt"/>
+      <arg value="${zanthan.tests.dir}/test_03/xml/param_test.xml"/>
+      <arg value="${zanthan.tests.dir}/test_03/txtresults/param_test.txt"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+
+    <!-- Generate the xsl stylesheet from the txt one -->
+    <java classname="com.zanthan.xsltxt.examples.TXTConverter" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_03/txt/param_test.txt"/>
+      <arg value="${zanthan.tests.dir}/test_03/xsl/param_test.xsl"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+
+    <!-- Use the newly generated xsl stylesheet -->
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${zanthan.tests.dir}/test_03/xsl/param_test.xsl"/>
+      <arg value="${zanthan.tests.dir}/test_03/xml/param_test.xml"/>
+      <arg value="${zanthan.tests.dir}/test_03/xslresults/param_test.txt"/>
+      <classpath refid="zanthan.classpath.run"/>
+    </java>
+    
+  </target>
+</project>
+
+

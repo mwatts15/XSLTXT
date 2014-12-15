@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD Simplified DocBook XML V4.1.2.5//EN" "../sdocbook.dtd">
+<!-- <!DOCTYPE article SYSTEM "../../../sdocbook.dtd"> -->
+<article>
+  <articleinfo>
+    <author><firstname>Alex</firstname><surname>Moffat</surname></author>
+    <title>XSLTXT : An alternative XSLT syntax</title>
+  </articleinfo>
+  <section>
+
+    <title>Why a different syntax?</title>
+
+    <para>The XML syntax for XSLT is very easy to parse, as it's XML,
+    relatively easy to read, but tedious to write once you get past
+    the simplest transformations. I find that the semantics of XSLT
+    get swamped by the syntax of XML. For example, the number of
+    characters used for xml markup can be very large compared to the
+    number used for the actual semantics of the transformations. For
+    example, if you want to write a simple template with a name of foo
+    that takes two parameters and generates a statement like
+    <command>SELECT x FROM y</command> you can write the template
+    element below. This uses approximately 122 characters for markup
+    and 22 for meaning.</para>
+    
+    <programlisting>
+      <![CDATA[
+<xsl:template name="foo">
+  <xsl:param name="a"/>
+  <xsl:param name="b"/>
+SELECT <xsl:value-of select="$a"/> FROM <xsl:value-of select="$b"/>
+</xsl:template>]]>
+    </programlisting>
+
+    <para>In contrast the alternative syntax can express this using
+    only 31 characters of markup and 22 characters for meaning, as
+    shown below. I hope that this makes the meaning clearer and it is
+    certainly quicker to write.</para>
+    
+    <programlisting>
+      <![CDATA[
+tpl .name "foo" ("a", "b")
+  "SELECT "
+  val "$a"
+  " FROM "
+  val "$b"]]>
+    </programlisting>
+
+    <para>XSLTXT makes no changes to XSLT semantics. The things that
+      are tedious to do in XSLT are still tedious in XSLTXT but at
+      least there is less typing. The advantage of this approach is
+      that in Java a <command>XMLReader</command> can be constructed
+      that will parse an XSLTXT file and produce SAX events as if an
+      XSLT file was being processed. XSLTXT can therefore be used in
+      place of XSLT without having to build another XSLT
+      processor.</para>
+      
+  </section>
+  <section>
+    <title>Basic principles</title>
+
+    <para>XSLTXT does four things to try to reduce the number of markup
+      characters.</para>
+
+    <itemizedlist>
+      <listitem>Use indentation to delimit the block structure instead of start and end markers.
+      </listitem>
+      <listitem>Reduce the length of some of the names used, for example <command>template</command> becomes <command>tpl</command>
+      </listitem>
+      <listitem>Required attributes no longer have attribute names, instead they are positional.
+      </listitem>
+      <listitem>In some situations <command>param</command> and
+      <command>with-param</command> statements can be written using
+      parentheses.
+      </listitem>
+    </itemizedlist>
+    
+    <para>An XSLTXT stylesheet is made up of statements, modifiers,
+    comments, quoted text, XML elements, and whitespace.</para>
+
+    <variablelist>
+      <varlistentry>
+	<term>Statements</term>
+	<listitem>
+	  <para>Statements correspond to the elements in XSLT such as
+    <command>&lt;xsl:apply-templates/&gt;</command>. They often have
+    the same name as the element they represent. In some cases though
+    a shorter name is used to help make it easier to write and read
+    XSLTXT.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Modifiers</term>
+	<listitem>
+	  <para>Modifiers correspond to the optional attributes of the
+    XSLT elements. They are written with a leading period, and are
+    generally named the same as the attribute they represent. For
+    example, the <command>mode</command> attribute is represented by
+    the <command>.mode</command> modifier. The value of the attribute
+    is written as a quoted string following the modifier. So the XSLT
+    element <command>&lt;xsl:apply-templates
+    select="author/given-name"/&gt;</command> would be represented by
+    the XSLTXT statement <command>apply .select
+    "author/given-name"</command></para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Comments</term>
+	<listitem>
+	  <para>Comments start with a # as the first non whitespace character
+	  on a line and proceed to the end of the line.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Quoted text</term>
+	<listitem>
+	  <para>The value of any modifier or any text to be output must be
+	  surrounded by &quot;. This is not the same as XSLT where any
+	  text not recognized as an XML element is output.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>XML elements</term>
+	<listitem>
+	  <para>You can include XML elements in the stylesheet just as in
+	  XSL. However, you should not write the close element. For example in XSL
+	  you might write</para>
+	  <programlisting>
+            <![CDATA[
+<first-name>Bob</first-name>]]>
+	  </programlisting>
+	  <para>but in XSLTXT you would write</para>
+	  <programlisting>
+	    <![CDATA[
+<first-name>
+  "Bob"]]>
+	  </programlisting>
+	  <para>instead as indentation is used to show the block structure of
+	  the element.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Whitespace</term>
+	<listitem>
+	  <para>is ignored</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    
+    <para>As with XSLT some XSLTXT statements can
+      <emphasis>contain</emphasis> other statments. XSLTXT uses
+      indentation to mark its block structure in a similar way to
+      Python and Haskell so it does not need the end element markers
+      of XML. A XSLTXT statement includes all those statements whose
+    indentation is greater than it's own indentation. For example in the two
+    templates below</para>
+
+    <programlisting>
+      <![CDATA[
+tpl .mode "client"
+  "Client "
+  val "@name"
+      
+tpl .mode "server"
+  "Server "
+  val "@host"  ]]>      
+    </programlisting>
+
+    <para>It can be seen from the indentation that the first, with
+      <command>.mode "client"</command>, contains the string
+      <command>"Client "</command> and the statement <command>val
+      "@name"</command>, while the second, with <command>.mode
+      "server"</command> contains the string <command>"Server
+      "</command> and the statement <command>val
+      "@host"</command>.</para>
+      
+    <para>Statements, modifiers and comments in XSLTXT are written
+      without quotes. Everything else is written in quotes.</para>
+    
+    <para>Required attributes need no modifier, just a value. For example
+    the <command>import</command> element has a required attribute
+    <command>href</command>. In XSLTXT the value for this attribute
+    is placed directly after the statement with no modifier. So,
+    <command><![CDATA[<xsl:import href="others.xsl"/>]]></command> becomes
+    <command>import "others.txt"</command> If a statement has more than
+    one required attribute they must be entered in the correct order.</para>
+
+    <para>Optional attributes are preceeded by their name with a
+    period in front of it, for example the mode attribute of a
+    template statement would be written <command>.mode
+    "myMode"</command></para>
+
+    <para>Parameters, whether expressed in xsl as
+    <command>param</command> or <command>with-param</command> can be
+    represented in XSLTXT in two ways. The representation used
+    depends on how any parameter value is represented. The first
+    representation can be chosen if all of the
+    <command>param</command> or <command>with-param</command>
+    statements either have no value, use the <command>select</command>
+    attribute to provide a value, or if there value is only a text
+    string. This representation surrounds the parameters with
+    <command>(</command> and <command>)</command> and separates each
+    parameter name from its value, if it has one, with a
+    <command>:</command>jif the value is a select or a
+    <command>%</command> if the value is to be used as a text
+    value. So,</para>
+
+    <programlisting>
+      <![CDATA[
+<xsl:template name="bySize">
+  <xsl:param name="height" select="@height"/>
+  <xsl:param name="weight" select="@weight"/>
+  <xsl:value-of select="$height"/> * <xsl:value-of select="$weight"/>    
+</xsl:template> ]]>
+    </programlisting>
+
+    <para>would be shown in XSLTXT as</para>
+
+    <programlisting>
+      <![CDATA[
+tpl .name "bySize" ("height":"@height", "weight":"@weight")
+  val "$height"
+  " * "
+  val "$weight" ]]>
+    </programlisting>
+
+    <para>and a call to this template could be written</para>
+
+    <programlisting>
+      <![CDATA[
+call "bySize" ("height":"@height", "weight"%"100")]]>
+    </programlisting>
+
+    <para>if the weight was going to be passed as a string with a
+      value of 100. This would be written in xslt as</para>
+
+    <programlisting>
+      <![CDATA[
+<xsl:call-template name="bySize">
+  <xsl:with-param name="height" select="@height"/>
+  <xsl:with-param name="weight">
+    <xsl:text>100</xsl:text>
+  </xsl:with-param>
+</xsl:call-template>]]>
+    </programlisting>
+
+    <para>If a parameter does not have a default value then the
+    <command>:</command> or <command>%</command> is not required. So
+    <command><![CDATA[<xsl:param name="foo"/>]]></command> would become
+    <command>("foo")</command></para>
+	
+    <para>Handling of <command>import</command> and
+    <command>include</command> statements. During conversion from
+    XSLTXT to XSLT or vise versa the extension on urls being imported
+    or includes is swapped.</para>
+    
+  </section>
+  <section>
+    <title>Using the alternative syntax.</title>
+    <section>
+      <title>Converting from XSLTXT to XSLT.</title>
+      
+      <para>In the directory
+	<command>src/com/zanthan/xsltxt/examples</command> is an
+	example called <command>TXTConverter.java</command> that
+	demonstrates how to convert from XSLTXT to XSL. It has comments to
+	explain what the steps are and should form a good basis if you
+	want to program something similar yourself.</para>
+
+    </section>
+    <section>
+      <title>Converting from XML to XSLTXT.</title>
+
+      <para>In the directory
+	<command>src/com/zanthan/xsltxt/examples</command> is an
+	example called <command>XSLConverter.java</command> that
+	demonstrates how to convert from XSL to XSLTXT. It has
+	comments to explain what the steps are and should form a good
+	basis if you want to program something similar
+	yourself. </para>
+
+    </section>
+    <section>
+      <title>Using XSLTXT in place of XSLT via TXTReader.</title>
+
+      <para>In the directory
+	<command>src/com/zanthan/xsltxt/examples</command> is an
+	example called <command>TXTStyler.java</command>. This
+	demonstrates how to use a TXTReaderTwo instance to process an
+	XSLTXT file directly into xsl style sheets.</para>
+    </section>
+  </section>
+</article>  
