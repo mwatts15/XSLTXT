@@ -1,17 +1,17 @@
 /**
  * XSLTXT - An alternative syntax for xslt
  * Copyright (C) 2002 Alex Moffat
- *  
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *  
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -46,41 +46,38 @@ import org.xml.sax.XMLReader;
 
 import junit.framework.*;
 
-public class TestTXTReaderTwo
+public class TestTXTReader
     extends TestCase {
 
     private final static Category logCat =
-	Logger.getLogger(TestTXTReaderTwo.class);
+	Logger.getLogger(TestTXTReader.class);
 
-    public TestTXTReaderTwo(String name) {
-	super(name);
+    public TestTXTReader(String name) {
+        super(name);
     }
 
     public void test0() {
 	if (logCat.isDebugEnabled())
 	    logCat.debug("test0()");
 
-	String txtFileName= 
-	    System.getProperty("zanthan.test.fileName.txt");
-	String inputFileName = 	
-	    System.getProperty("zanthan.test.fileName.in");
-	String outputFileName = 
-	    System.getProperty("zanthan.test.fileName.out");
+	String txtFileName = System.getProperty("zanthan.test.fileName.txt");
+	String inputFileName = System.getProperty("zanthan.test.fileName.in");
+	String outputFileName = System.getProperty("zanthan.test.fileName.out");
 
 	try {
-	    BasicResolver resolver = new BasicResolverTwo();
-	    TXTReaderTwo txtRdr = new TXTReaderTwo();
+	    BasicResolver resolver = new BasicResolver();
+	    TXTReader txtRdr = new TXTReader();
 
 	    TransformerFactory factory =
 		TransformerFactory.newInstance();
 	    factory.setURIResolver(resolver);
-	    
+
 	    InputSource in = new InputSource(new FileReader(txtFileName));
 	    in.setSystemId(new File(txtFileName).getCanonicalPath());
 
 	    if (logCat.isDebugEnabled())
 		logCat.debug("test0() - starting to build transformer");
-	    
+
 	    long before = System.currentTimeMillis();
 	    Transformer transformer =
 		factory.newTransformer(new SAXSource(txtRdr, in));
@@ -91,14 +88,14 @@ public class TestTXTReaderTwo
 			     (after - before));
 
 	    transformer.setURIResolver(resolver);
-	    
+
 	    StreamResult outResult =
 		new StreamResult(new FileOutputStream(outputFileName));
-	    
+
 	    SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-	    if (logCat.isDebugEnabled())
-		logCat.debug("parserFactory is " +
-			     parserFactory.getClass().getName());
+
+
+
 	    parserFactory.setValidating(false);
 	    SAXParser parser = parserFactory.newSAXParser();
 	    XMLReader xmlRdr = parser.getXMLReader();
@@ -107,7 +104,7 @@ public class TestTXTReaderTwo
 	    //in.setSystemId(inputFileName);
 	    SAXSource saxSrc = new SAXSource(xmlRdr, in);
 	    saxSrc.setSystemId(new File(inputFileName).getCanonicalPath()) ;
-	    
+
 	    transformer.transform(saxSrc, outResult);
 
 	} catch (ParserConfigurationException pce) {
@@ -121,10 +118,5 @@ public class TestTXTReaderTwo
 	} catch (IOException ioe) {
 	    fail("Should not throw exception " + ioe);
 	}
-    }
-
-    public static void main(String[] args) {
-	TestTXTReaderTwo tt = new TestTXTReaderTwo("test0");
-	tt.test0();
     }
 }
