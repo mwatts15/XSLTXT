@@ -6,9 +6,6 @@
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>XSLTXT: An alternative XSLT syntax</name>
-    <!--These properties, dependencies, and plugins and were copied plotmeal
-         from the appengine Java Tutorial skeleton project after begining
-         as a regular Java EE application-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -16,7 +13,6 @@
     <prerequisites>
         <maven>3.1.0</maven>
     </prerequisites>
-
     <dependencies>
         <dependency>
             <groupId>xalan</groupId>
@@ -31,7 +27,7 @@
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>2.0.2</version>
+            <version>1.4.01</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -120,5 +116,10 @@
                 </dependencies>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>properties</directory>
+            </resource>
+        </resources>
     </build>
 </project>
