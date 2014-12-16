@@ -1,0 +1,124 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.zanthan</groupId>
+    <artifactId>xsltxt</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>XSLTXT: An alternative XSLT syntax</name>
+    <!--These properties, dependencies, and plugins and were copied plotmeal
+         from the appengine Java Tutorial skeleton project after begining
+         as a regular Java EE application-->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <prerequisites>
+        <maven>3.1.0</maven>
+    </prerequisites>
+
+    <dependencies>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom-legacy</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.7</version>
+        </dependency>
+        <dependency>
+            <groupId>xmlunit</groupId>
+            <artifactId>xmlunit</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>xsltxt</finalName>
+        <sourceDirectory>src/main</sourceDirectory>
+        <!--<testSourceDirectory>src/test</testSourceDirectory>-->
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.1</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>display-dependency-updates</goal>
+                            <goal>display-plugin-updates</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>3.2</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <configuration>
+                            <target>
+                                <ant antfile="build.xml"
+                                    output="maven-ant-run.out">
+                                    <target name="test_01" />
+                                    <target name="test_02" />
+                                    <target name="test_03" />
+                                </ant>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.sun</groupId>
+                        <artifactId>tools</artifactId>
+                        <version>1.7.0</version>
+                        <scope>system</scope>
+                        <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>
