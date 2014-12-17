@@ -1,0 +1,124 @@
+<project name="com.zanthan.xsl"
+  default="all">
+
+  <target name="test_01">
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${testDir}/test_01/xslresults"/>
+      <fileset dir="${testDir}/test_01/txtresults"/>
+    </delete>
+    <mkdir dir="${testDir}/test_01/xslresults"/>
+    <mkdir dir="${testDir}/test_01/txtresults"/>
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <classpath refid="maven.test.classpath"/>
+      <arg value="${testDir}/test_01/xsl/rpt1.xsl"/>
+      <arg value="${testDir}/test_01/xml/test.xml"/>
+      <arg value="${testDir}/test_01/xslresults/rpt1.html"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${testDir}/test_01/xsl/rpt2.xsl"/>
+      <arg value="${testDir}/test_01/xml/test.xml"/>
+      <arg value="${testDir}/test_01/xslresults/rpt2.html"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${testDir}/test_01/xsl/rpt3.xsl"/>
+      <arg value="${testDir}/test_01/xml/test.xml"/>
+      <arg value="${testDir}/test_01/xslresults/rpt3.html"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${testDir}/test_01/txt/rpt1.txt"/>
+      <arg value="${testDir}/test_01/xml/test.xml"/>
+      <arg value="${testDir}/test_01/txtresults/rpt1.html"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${testDir}/test_01/txt/rpt2.txt"/>
+      <arg value="${testDir}/test_01/xml/test.xml"/>
+      <arg value="${testDir}/test_01/txtresults/rpt2.html"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${testDir}/test_01/txt/rpt3.txt"/>
+      <arg value="${testDir}/test_01/xml/test.xml"/>
+      <arg value="${testDir}/test_01/txtresults/rpt3.html"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+    
+  </target>
+
+  <target name="test_02"
+    >
+
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${testDir}/test_02/xslresults"/>
+      <fileset dir="${testDir}/test_02/txtresults"/>
+    </delete>
+
+    <mkdir dir="${testDir}/test_02/xslresults"/>
+    <mkdir dir="${testDir}/test_02/txtresults"/>
+
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${testDir}/test_02/xsl/analyst.xsl"/>
+      <arg value="${testDir}/test_02/xml/analyst.xml"/>
+      <arg value="${testDir}/test_02/xslresults/analyst.html"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+    
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${testDir}/test_02/txt/analyst.txt"/>
+      <arg value="${testDir}/test_02/xml/analyst.xml"/>
+      <arg value="${testDir}/test_02/txtresults/analyst.html"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+    
+  </target>
+
+  <target name="test_03"
+    >
+
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${testDir}/test_03/xslresults"/>
+      <fileset dir="${testDir}/test_03/txtresults"/>
+    </delete>
+
+    <mkdir dir="${testDir}/test_03/xslresults"/>
+    <mkdir dir="${testDir}/test_03/txtresults"/>
+
+    <!-- Delete the xsl file as it is generated from the txt one -->
+    <delete includeEmptyDirs="true" failOnError="false">
+      <fileset dir="${testDir}/test_03/xsl"/>
+    </delete>
+
+    <mkdir dir="${testDir}/test_03/xsl"/>
+
+    <!-- Use the txt stylesheet -->
+    <java classname="com.zanthan.xsltxt.examples.TXTStyler" fork="yes">
+      <arg value="${testDir}/test_03/txt/param_test.txt"/>
+      <arg value="${testDir}/test_03/xml/param_test.xml"/>
+      <arg value="${testDir}/test_03/txtresults/param_test.txt"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+
+    <!-- Generate the xsl stylesheet from the txt one -->
+    <java classname="com.zanthan.xsltxt.examples.TXTConverter" fork="yes">
+      <arg value="${testDir}/test_03/txt/param_test.txt"/>
+      <arg value="${testDir}/test_03/xsl/param_test.xsl"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+
+    <!-- Use the newly generated xsl stylesheet -->
+    <java classname="com.zanthan.xsltxt.examples.XSLStyler" fork="yes">
+      <arg value="${testDir}/test_03/xsl/param_test.xsl"/>
+      <arg value="${testDir}/test_03/xml/param_test.xml"/>
+      <arg value="${testDir}/test_03/xslresults/param_test.txt"/>
+      <classpath refid="maven.test.classpath"/>
+    </java>
+    
+  </target>
+</project>

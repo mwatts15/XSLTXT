@@ -8,6 +8,7 @@
     <name>XSLTXT: An alternative XSLT syntax</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <testDir>${basedir}/tests</testDir>
     </properties>
 
     <prerequisites>
@@ -104,9 +105,7 @@
                         <phase>test</phase>
                         <configuration>
                             <target>
-                                <ant antfile="build.xml"
-                                    output="maven-ant-run.out">
-                                    <classpath refid="maven.test.classpath"/>
+                                <ant antfile="test.xml" inheritRefs="true">
                                     <target name="test_01" />
                                     <target name="test_02" />
                                     <target name="test_03" />

@@ -1,4 +1,0 @@
-Main-Class: com.zanthan.xsltxt.examples.TXTStyler
-
-Name: com/zanthan/xsltxt
-
