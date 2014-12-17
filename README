@@ -1,47 +1,66 @@
+XSLTXT: An Alternative XSL Syntax
+=================================
+
+OVERVIEW
+--------
+*This overview was copied from the original XSLTXT website: http://www.zanthan.com/ajm/xsltxt/docs.html*
+
+Why a different syntax?
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The XML syntax for XSLT is very easy to parse, as it's XML, relatively easy to read, but tedious to write once you get past the simplest transformations. I find that the semantics of XSLT get swamped by the syntax of XML. For example, the number of characters used for xml markup can be very large compared to the number used for the actual semantics of the transformations. For example, if you want to write a simple template with a name of foo that takes two parameters and generates a statement like SELECT x FROM y you can write the template element below. This uses approximately 122 characters for markup and 22 for meaning.
+
+      
+<xsl:template name="foo">
+  <xsl:param name="a"/>
+  <xsl:param name="b"/>
+SELECT <xsl:value-of select="$a"/> FROM <xsl:value-of select="$b"/>
+</xsl:template>
+    
+
+In contrast the alternative syntax can express this using only 31 characters of markup and 22 characters for meaning, as shown below. I hope that this makes the meaning clearer and it is certainly quicker to write.
+
+      
+tpl .name "foo" ("a", "b")
+  "SELECT "
+  val "$a"
+  " FROM "
+  val "$b"
+    
+
+XSLTXT makes no changes to XSLT semantics. The things that are tedious to do in XSLT are still tedious in XSLTXT but at least there is less typing. The advantage of this approach is that in Java a XMLReader can be constructed that will parse an XSLTXT file and produce SAX events as if an XSLT file was being processed. XSLTXT can therefore be used in place of XSLT without having to build another XSLT processor.
+
+Basic principles
+~~~~~~~~~~~~~~~~
+
+XSLTXT does four things to try to reduce the number of markup characters.
+
+    * Use indentation to delimit the block structure instead of start and end markers.
+    * Reduce the length of some of the names used, for example template becomes tpl
+    * Required attributes no longer have attribute names, instead they are positional.
+    * In some situations param and with-param statements can be written using parentheses. 
+
+BUILD
+-----
+The XSLTXT library (a JAR file) can be compiled, tested, and installed in your local repo
+by using Maven:
+
+    mvn install
+
+All dependencies are included in the pom.xml file. 
+
+There is a slight problem with the xerces the implementation of non
+default entity resolvers. In some situations the entity resolver will
+be passed a null publicId to the resolveEntity method. This is fixed 
+in the current cvs sources for xerces. For now the 
+BasicResolver.resolveEntity method in xsltxt issues a warning in this
+situation and returns null to invoke default resolution, which works
+fine.
+
+LICENSE
+-------
 The code for xsltxt is licensed under the conditions of the
 Lesser GNU Public License. See the file COPYING for more information.
 
 xsltxt uses code licensed under a variety of other licenses. See the
 various LICENSE.* files.
-
-Very basic instructions. More to follow. If you have problems ask a
-question on savannah at https://savannah.gnu.org/projects/xsltxt/ in
-the support area.
-
-To compile and execute the code you'll need some addtional libararies
-and, of course, Ant (from http://jakarta.apache.org/ant/index.html)
-
-jdom.jar - From http://www.jdom.org (using version b8)
-
-junit.jar - From http://www.junit.org/index.htm (using version 3.7)
-
-log4j.jar - From http://jakarta.apache.org/log4j/docs/index.html
-(using version 1.2.7)
-
-xalan.jar, xercesImpl.jar and xml-apis.jar - From
-http://xml.apache.org/xalan-j/index.html (using version 2.3.1)
-
-ant.jar and optional.jar - From Ant (version 1.5.1) to provide the
-xsltxt task to ant.
-
-These should be copied into or linked into a directory called lib at
-the same level as build.xml. If you run the "prepare" target in
-build.xml the lib directory will be correctly created but you still
-need to do the copying or linking.
-
-The latest released versions of all of these packages will work for
-all stylesheets. There is a slight problem with the xerces the
-implementation of non default entity resolvers. In some situations the
-entity resolver will be passed a null publicId to the resolveEntity
-method. This is fixed in the current cvs sources for xerces. For now
-the BasicResolver.resolveEntity method in xsltxt issues a warning in
-this situation and returns null to invoke default resolution, which
-works fine.
-
-The very, very basic script runant.sh runs ant on my system. The only
-significance to this is the names used to pass arguments to the ant
-targets. These must match if you want to successfully execute some of
-the run... targets.
-
-Take a look at build.xml to see the available targets they have
-comments describing what they do.
